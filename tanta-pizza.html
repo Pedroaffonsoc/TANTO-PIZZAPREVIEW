@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanta Pizza | Massa de 48h de Fermentação — Belém, PA</title>
+<meta name="description" content="Pizzas artesanais com massa de longa fermentação (48h), leve e de fácil digestão. Peça agora e receba em Belém.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:      '#140F0C',
+          char:     '#1E1712',
+          charup:   '#251C16',
+          surface:  '#2A2019',
+          crust:    '#E8A33D',
+          crustdk:  '#C67F21',
+          sauce:    '#C1401F',
+          saucedk:  '#8F2C14',
+          jambu:    '#7A9A56',
+          jambudk:  '#566F3B',
+          cream:    '#F4EADC',
+          muted:    '#B4A28A',
+        },
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          body:    ['Sora', 'sans-serif'],
+          mono:    ['"JetBrains Mono"', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #1E1712;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 15% 0%, rgba(232,163,61,0.08), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 20%, rgba(193,64,31,0.10), transparent 60%);
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 60; opacity: .05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.show { opacity: 1; transform: translateY(0); }
+
+  /* hand-torn / hand-stretched dough edge for pizza "photos" */
+  .dough {
+    clip-path: polygon(6% 2%, 22% 0%, 40% 3%, 58% 0%, 76% 3%, 94% 0%, 100% 18%, 97% 38%, 100% 58%, 96% 78%, 100% 94%, 80% 100%, 60% 97%, 42% 100%, 24% 97%, 2% 100%, 0% 80%, 4% 60%, 0% 40%, 3% 20%);
+  }
+
+  /* perforated ticket edge */
+  .ticket-tear-top, .ticket-tear-bottom {
+    height: 14px;
+    background-image: radial-gradient(circle at 10px 0, #1E1712 6px, transparent 6.5px);
+    background-size: 20px 14px;
+    background-repeat: repeat-x;
+  }
+  .ticket-tear-bottom { transform: rotate(180deg); }
+
+  .price-tag::before { content: "R$"; font-size: .6em; vertical-align: middle; opacity: .7; margin-right: 2px; }
+
+  /* real, printed-menu paper: torn top & bottom edges */
+  .paper-tear {
+    clip-path: polygon(
+      0% 3%, 5% 0%, 10% 3%, 15% 0%, 20% 3%, 25% 0%, 30% 3%, 35% 0%, 40% 3%, 45% 0%, 50% 3%, 55% 0%, 60% 3%, 65% 0%, 70% 3%, 75% 0%, 80% 3%, 85% 0%, 90% 3%, 95% 0%, 100% 3%,
+      100% 97%, 95% 100%, 90% 97%, 85% 100%, 80% 97%, 75% 100%, 70% 97%, 65% 100%, 60% 97%, 55% 100%, 50% 97%, 45% 100%, 40% 97%, 35% 100%, 30% 97%, 25% 100%, 20% 97%, 15% 100%, 10% 97%, 5% 100%, 0% 97%
+    );
+  }
+  .menu-paper {
+    background-color: #F4EADC;
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(20,15,12,0.04), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(20,15,12,0.05), transparent 45%),
+      repeating-linear-gradient(0deg, rgba(20,15,12,0.015) 0px, rgba(20,15,12,0.015) 1px, transparent 1px, transparent 3px);
+  }
+
+  /* dotted leader line between item name and price, like a real printed menu */
+  .leader { flex: 1 1 auto; border-bottom: 2px dotted rgba(20,15,12,0.28); margin: 0 10px; transform: translateY(-4px); min-width: 16px; }
+
+  /* wax-seal style numbering on the craft cards */
+  .seal {
+    position: relative;
+  }
+  .seal::after {
+    content: attr(data-n);
+    position: absolute; top: -10px; right: -10px;
+    width: 34px; height: 34px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+    background: #1E1712; color: #E8A33D; border: 1px dashed rgba(232,163,61,0.5);
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #1E1712; }
+  ::-webkit-scrollbar-thumb { background: #C67F21; border-radius: 8px; }
+
+  #cart-drawer { transition: transform .45s cubic-bezier(.16,1,.3,1); }
+</style>
+</head>
+
+<body class="bg-char text-cream font-body antialiased">
+<div class="grain"></div>
+
+<!-- ============ NAV ============ -->
+<header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-ink/70 border-b border-white/5">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+    <a href="#topo" class="flex items-center gap-2 select-none">
+      <span class="font-display italic font-medium text-2xl text-crust">Tanta</span>
+      <span class="font-display font-semibold text-2xl text-cream -ml-1">pizza</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 font-body text-sm text-muted">
+      <a href="#arte" class="hover:text-crust transition-colors">A Nossa Arte</a>
+      <a href="#cardapio" class="hover:text-crust transition-colors">Cardápio</a>
+      <a href="#contato" class="hover:text-crust transition-colors">Contato</a>
+    </nav>
+    <a href="#cardapio" class="bg-crust hover:bg-crustdk text-ink font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">
+      Pedir Agora
+    </a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="topo" class="relative pt-40 pb-24 md:pt-52 md:pb-32 overflow-hidden">
+  <div class="absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full bg-sauce/20 blur-[100px]"></div>
+  <div class="absolute top-40 -left-32 w-[360px] h-[360px] rounded-full bg-jambu/10 blur-[110px]"></div>
+
+  <div class="relative max-w-6xl mx-auto px-5 md:px-8 grid md:grid-cols-2 gap-14 items-center">
+    <div class="reveal show">
+      <span class="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-jambu font-semibold mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-jambu"></span> Feita à mão, em Belém do Pará
+      </span>
+
+      <h1 class="font-display leading-[0.95] text-cream">
+        <span class="block text-6xl md:text-8xl font-semibold text-crust">48 horas</span>
+        <span class="block text-2xl md:text-4xl italic font-light text-cream/90 mt-2">de fermentação lenta,</span>
+        <span class="block text-2xl md:text-4xl italic font-light text-cream/90">numa massa incrivelmente leve.</span>
+      </h1>
+
+      <p class="mt-7 text-muted text-base md:text-lg max-w-md leading-relaxed">
+        Aberta à mão, com muito amor e controle. Uma textura aerada e de fácil digestão — porque pizza boa também é sobre como você se sente depois.
+      </p>
+
+      <div class="mt-9 flex flex-col sm:flex-row gap-3">
+        <a href="#cardapio" class="inline-flex items-center justify-center gap-2 bg-sauce hover:bg-saucedk text-cream font-semibold px-7 py-4 rounded-full transition-colors shadow-lg shadow-sauce/20">
+          Pedir Agora
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#arte" class="inline-flex items-center justify-center gap-2 border border-white/15 hover:border-crust/60 text-cream/90 font-medium px-7 py-4 rounded-full transition-colors">
+          Conhecer a massa
+        </a>
+      </div>
+    </div>
+
+    <!-- signature dough visual -->
+    <div class="relative reveal show mx-auto">
+      <div class="dough w-64 h-64 md:w-80 md:h-80 mx-auto relative"
+           style="background: radial-gradient(circle at 32% 28%, #F3D89A 0%, #E8A33D 38%, #C67F21 62%, #8F5A16 100%);
+                  box-shadow: 0 30px 60px -20px rgba(0,0,0,.6), inset 0 0 0 10px rgba(243,232,216,0.12);">
+        <div class="absolute inset-6 rounded-full opacity-90"
+             style="background: radial-gradient(circle at 40% 35%, #D6501F 0%, #C1401F 55%, #8F2C14 100%);"></div>
+        <div class="absolute inset-6 rounded-full"
+             style="background-image: radial-gradient(circle, #7A9A56 3px, transparent 3.2px);
+                    background-size: 26px 26px; opacity:.55;"></div>
+      </div>
+      <div class="absolute -bottom-5 -left-4 md:-left-8 bg-ink/90 border border-white/10 rounded-2xl px-5 py-3 shadow-xl">
+        <p class="font-mono text-crust text-xs">tempo de fermentação</p>
+        <p class="font-display text-2xl text-cream font-semibold">48h00</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A NOSSA ARTE ============ -->
+<section id="arte" class="relative py-24 md:py-32 bg-charup border-y border-white/5">
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="max-w-2xl reveal">
+      <span class="text-xs tracking-[0.2em] uppercase text-crust font-semibold">A Nossa Arte</span>
+      <h2 class="font-display text-4xl md:text-5xl font-semibold mt-3 leading-tight">
+        Massa artesanal, <span class="italic text-crust">controle total.</span>
+      </h2>
+      <p class="text-muted mt-5 text-base md:text-lg leading-relaxed">
+        Massas artesanais de longa fermentação (48h), com textura incrivelmente leve, aerada e de fácil digestão. Cada massa é aberta à mão, com muito amor e controle.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-6 mt-16">
+      <div class="seal reveal relative bg-surface/60 border border-white/5 rounded-2xl p-7 pt-8 overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-crust/40 hover:shadow-2xl hover:shadow-crust/5" data-n="01">
+        <span class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-crust via-crust/40 to-transparent"></span>
+        <div class="w-12 h-12 rounded-full bg-crust/15 border border-crust/20 flex items-center justify-center mb-6">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8A33D" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-cream">Fermentação de 48h</h3>
+        <p class="text-muted text-sm mt-2 leading-relaxed">Tempo lento que desenvolve sabor e deixa a massa mais digerível.</p>
+      </div>
+      <div class="seal reveal relative bg-surface/60 border border-white/5 rounded-2xl p-7 pt-8 overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-sauce/40 hover:shadow-2xl hover:shadow-sauce/5" data-n="02">
+        <span class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-sauce via-sauce/40 to-transparent"></span>
+        <div class="w-12 h-12 rounded-full bg-sauce/15 border border-sauce/20 flex items-center justify-center mb-6">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C1401F" stroke-width="2"><path d="M4 18c4-10 12-10 16 0"/><path d="M4 18h16"/></svg>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-cream">Textura leve e aerada</h3>
+        <p class="text-muted text-sm mt-2 leading-relaxed">Alvéolos bem formados, crocante por fora, macia por dentro.</p>
+      </div>
+      <div class="seal reveal relative bg-surface/60 border border-white/5 rounded-2xl p-7 pt-8 overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-jambu/40 hover:shadow-2xl hover:shadow-jambu/5" data-n="03">
+        <span class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-jambu via-jambu/40 to-transparent"></span>
+        <div class="w-12 h-12 rounded-full bg-jambu/15 border border-jambu/20 flex items-center justify-center mb-6">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7A9A56" stroke-width="2"><path d="M7 21c-3-3-3-8 0-13 2 4 4 5 6 4 1 3-1 6-3 7 3 0 6-1 8-4 1 5-2 10-6 10"/></svg>
+        </div>
+        <h3 class="font-display text-xl font-semibold text-cream">Aberta à mão</h3>
+        <p class="text-muted text-sm mt-2 leading-relaxed">Sem atalhos: cada disco é esticado manualmente, com controle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CARDÁPIO ============ -->
+<section id="cardapio" class="relative py-24 md:py-32">
+  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-crust/5 blur-[140px] pointer-events-none"></div>
+
+  <div class="relative max-w-4xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-12 reveal">
+      <span class="text-xs tracking-[0.2em] uppercase text-crust font-semibold">Cardápio</span>
+      <h2 class="font-display text-4xl md:text-5xl font-semibold mt-3">Escolha a sua.</h2>
+      <p class="text-muted text-sm mt-4 max-w-md mx-auto">Toque em <span class="text-crust font-semibold">+</span> para montar seu pedido — o carrinho monta a mensagem pronta para o WhatsApp.</p>
+    </div>
+
+    <!-- a folha de cardápio de verdade -->
+    <div class="reveal paper-tear menu-paper text-ink shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)] px-6 py-14 sm:px-12 sm:py-16">
+
+      <div class="text-center mb-10 pb-8 border-b-2 border-dotted border-ink/15">
+        <p class="font-display italic text-2xl text-sauce">Tanta</p>
+        <p class="font-display font-semibold text-3xl -mt-2">pizza</p>
+        <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-ink/50 mt-3">Massa de 48h · Aberta à mão · Belém, PA</p>
+      </div>
+
+      <div id="menu-paper-body" class="space-y-12">
+        <!-- categorias e itens inseridos via JS a partir do array MENU -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUTOMAÇÃO / ASSISTENTE VIRTUAL ============ -->
+<section class="max-w-6xl mx-auto px-5 md:px-8 pb-24">
+  <div class="bg-gradient-to-br from-surface to-ink border border-white/5 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 reveal">
+    <div class="flex-1">
+      <span class="text-xs tracking-[0.2em] uppercase text-jambu font-semibold">Atendimento inteligente</span>
+      <h3 class="font-display text-2xl md:text-3xl font-semibold mt-3">Dúvidas sobre o cardápio? Fale com nosso assistente.</h3>
+      <p class="text-muted mt-3 max-w-lg leading-relaxed">Nosso assistente virtual ajuda a escolher a pizza ideal, informa tempo de entrega e finaliza o pedido direto pelo chat.</p>
+    </div>
+    <div class="w-full md:w-auto">
+      <div class="w-full md:w-72 h-40 rounded-2xl border border-dashed border-white/15 flex items-center justify-center text-center text-xs text-muted/70 px-4">
+        Widget do assistente carrega aqui
+      </div>
+    </div>
+  </div>
+  <!-- INSERIR SCRIPT DO TYPEBOT OU WIDGET DE WHATSAPP AQUI -->
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="contato" class="bg-ink border-t border-white/5 pt-16 pb-28 md:pb-16">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 grid md:grid-cols-3 gap-10">
+    <div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="font-display italic font-medium text-2xl text-crust">Tanta</span>
+        <span class="font-display font-semibold text-2xl text-cream -ml-1">pizza</span>
+      </div>
+      <p class="text-muted text-sm leading-relaxed max-w-xs">Massas artesanais de longa fermentação, feitas à mão em Belém do Pará.</p>
+    </div>
+    <div>
+      <h4 class="font-body font-semibold text-cream text-sm uppercase tracking-wide mb-4">Atendimento</h4>
+      <ul class="space-y-2 text-muted text-sm">
+        <li>Ter. a Dom. — 18h às 23h30</li>
+        <li>Belém, Pará — Brasil</li>
+        <li class="font-mono text-crust">(91) 99999-9999</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-body font-semibold text-cream text-sm uppercase tracking-wide mb-4">Redes sociais</h4>
+      <ul class="space-y-2 text-muted text-sm">
+        <li><a href="#" class="hover:text-crust transition-colors">Instagram</a></li>
+        <li><a href="#" class="hover:text-crust transition-colors">Facebook</a></li>
+        <li><a href="#" class="hover:text-crust transition-colors">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-5 md:px-8 mt-12 pt-6 border-t border-white/5 text-xs text-muted/60">
+    © 2026 Tanta Pizza. Todos os direitos reservados.
+  </div>
+</footer>
+
+<!-- ============ CARRINHO FLUTUANTE ============ -->
+<button id="cart-fab" class="fixed bottom-5 right-5 z-50 bg-sauce hover:bg-saucedk text-cream rounded-full shadow-2xl shadow-black/40 pl-5 pr-6 py-4 flex items-center gap-3 transition-transform active:scale-95">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+  <span class="font-semibold text-sm">Meu pedido</span>
+  <span id="cart-count" class="bg-cream text-ink text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+</button>
+
+<div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] hidden"></div>
+
+<aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[380px] z-[60] translate-x-full">
+  <div class="h-full flex flex-col bg-[#F4EADC] text-ink">
+    <div class="ticket-tear-top"></div>
+    <div class="px-6 pt-2 pb-4 flex items-center justify-between border-b border-dashed border-ink/20">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest text-ink/50">Comanda</p>
+        <h3 class="font-display text-2xl font-semibold">Seu pedido</h3>
+      </div>
+      <button id="cart-close" class="w-9 h-9 rounded-full hover:bg-ink/5 flex items-center justify-center transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#140F0C" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div id="cart-items" class="flex-1 overflow-y-auto px-6 py-4 font-mono text-sm space-y-4">
+      <!-- itens do carrinho renderizados via JS -->
+    </div>
+
+    <div id="cart-empty" class="flex-1 flex items-center justify-center text-center px-6 text-ink/50 font-mono text-sm">
+      Sua comanda está vazia.<br>Adicione uma pizza do cardápio.
+    </div>
+
+    <div class="px-6 py-5 border-t border-dashed border-ink/20 font-mono">
+      <div class="flex items-center justify-between text-sm text-ink/60 mb-1">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">R$ 0,00</span>
+      </div>
+      <div class="flex items-center justify-between text-lg font-bold mb-4">
+        <span>Total</span>
+        <span id="cart-total">R$ 0,00</span>
+      </div>
+      <a id="cart-whatsapp" href="#" target="_blank" rel="noopener"
+         class="w-full flex items-center justify-center gap-2 bg-jambu hover:bg-jambudk text-cream font-body font-semibold py-4 rounded-full transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.44 5.14L2 22l5.09-1.53a9.85 9.85 0 0 0 4.95 1.34h.01c5.46 0 9.91-4.45 9.91-9.9C21.96 6.45 17.5 2 12.04 2zm5.83 14.13c-.24.68-1.42 1.3-1.96 1.38-.5.08-1.13.11-1.83-.12-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.83 2 .9 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.62 2.01 1.11 1 2.05 1.31 2.34 1.46.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.64.77 1.92.91.28.14.46.22.53.34.07.12.07.68-.17 1.36z"/></svg>
+        Enviar pedido no WhatsApp
+      </a>
+    </div>
+    <div class="ticket-tear-bottom"></div>
+  </div>
+</aside>
+
+<script>
+  // ---------- CARDÁPIO ----------
+  const MENU = [
+    { id:1, categoria:"Clássicas", nome:"Mussarela Tradicional", desc:"Molho de tomate artesanal coberto com mussarela e orégano.", preco:49.50, cores:["#E8A33D","#F1C77A"] },
+    { id:2, categoria:"Clássicas", nome:"Marguerita Especial", desc:"Molho de tomate artesanal, mussarela, rodelas de tomates assados, manjericão fresco e orégano.", preco:59.50, cores:["#C1401F","#E8A33D"] },
+    { id:3, categoria:"Clássicas", nome:"Calabresa com Cebola", desc:"Molho de tomate artesanal, mussarela, calabresa premium, cebolas assadas e orégano.", preco:59.50, cores:["#8F2C14","#E8A33D"] },
+    { id:4, categoria:"Especiais", nome:"Bacon Crocante", desc:"Molho de tomate artesanal, mussarela, fatias de bacon crocantes e orégano.", preco:69.50, cores:["#C67F21","#F1C77A"] },
+    { id:5, categoria:"Especiais", nome:"Frango com Requeijão", desc:"Camada cremosa de requeijão, frango desfiado, mussarela e orégano.", preco:69.50, cores:["#F3D89A","#E8A33D"] },
+    { id:6, categoria:"Especiais", nome:"Carne Desfiada Premium", desc:"Requeijão, carne desfiada super macia, mussarela, cebolas assadas, cebolinha e orégano.", preco:79.50, cores:["#8F2C14","#C67F21"] },
+    { id:7, categoria:"Especiais", nome:"Filé Com Alho Frito", desc:"Mussarela, filé em isca, alho frito e orégano.", preco:79.50, cores:["#C1401F","#F1C77A"] },
+    { id:8, categoria:"Frutos do Mar & Regional", nome:"Camarão Rosa ao Alho Frito", desc:"Mussarela, camarão rosa, alho frito e orégano.", preco:84.50, cores:["#E8A33D","#7A9A56"] },
+    { id:9, categoria:"Frutos do Mar & Regional", nome:"Vatapá Marajoara", desc:"Molho à base de vatapá, mussarela de búfala, camarão rosa e jambu cozido. Nossa especialidade regional.", preco:84.50, cores:["#7A9A56","#E8A33D"], destaque:true },
+    { id:10, categoria:"Doce", nome:"Creme de Avelã", desc:"Molho à base de leite coberto com creme de avelã e nibs de cacau.", preco:79.50, cores:["#5A3A28","#8F5A16"] },
+  ];
+
+  const fmt = v => v.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+
+  // ---------- MONTA O CARDÁPIO COMO UM MENU IMPRESSO DE VERDADE ----------
+  const paper = document.getElementById('menu-paper-body');
+  const CATEGORIAS = ["Clássicas", "Especiais", "Frutos do Mar & Regional", "Doce"];
+
+  CATEGORIAS.forEach(cat => {
+    const itens = MENU.filter(m => m.categoria === cat);
+    if (!itens.length) return;
+
+    const catBlock = document.createElement('div');
+    catBlock.className = "reveal";
+
+    const rows = itens.map(item => `
+      <div class="group py-5 ${item !== itens[itens.length - 1] ? 'border-b border-dotted border-ink/12' : ''}">
+        <div class="flex items-start gap-4">
+          <div class="dough w-14 h-14 flex-shrink-0 shadow-sm" style="background: radial-gradient(circle at 35% 30%, ${item.cores[1]}, ${item.cores[0]} 70%);"></div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline">
+              <h3 class="font-display text-lg font-semibold text-ink leading-snug">
+                ${item.nome}
+                ${item.destaque ? `<span class="align-middle ml-2 inline-block bg-jambu/15 text-jambudk text-[10px] font-mono font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border border-jambu/30">Especialidade</span>` : ``}
+              </h3>
+              <span class="leader"></span>
+              <span class="font-mono price-tag text-saucedk font-semibold text-base whitespace-nowrap">${item.preco.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <p class="text-ink/55 text-sm italic mt-1.5 leading-relaxed pr-2">${item.desc}</p>
+          </div>
+
+          <button data-id="${item.id}" class="add-btn flex-shrink-0 w-9 h-9 rounded-full bg-ink text-cream hover:bg-sauce flex items-center justify-center transition-colors mt-1" aria-label="Adicionar ${item.nome}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    catBlock.innerHTML = `
+      <div class="flex items-center gap-3 mb-2">
+        <h4 class="font-mono text-xs tracking-[0.25em] uppercase text-saucedk font-semibold whitespace-nowrap">${cat}</h4>
+        <span class="flex-1 border-t border-ink/10"></span>
+      </div>
+      <div>${rows}</div>
+    `;
+    paper.appendChild(catBlock);
+  });
+
+  // ---------- CARRINHO ----------
+  const cart = {}; // { id: qty }
+
+  const fab = document.getElementById('cart-fab');
+  const drawer = document.getElementById('cart-drawer');
+  const overlay = document.getElementById('cart-overlay');
+  const closeBtn = document.getElementById('cart-close');
+  const itemsEl = document.getElementById('cart-items');
+  const emptyEl = document.getElementById('cart-empty');
+  const countEl = document.getElementById('cart-count');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const totalEl = document.getElementById('cart-total');
+  const waLink = document.getElementById('cart-whatsapp');
+
+  // Número da pizzaria (formato internacional, sem símbolos). Substitua pelo número real.
+  const WHATSAPP_NUMBER = "5591999999999";
+
+  function openCart() {
+    overlay.classList.remove('hidden');
+    drawer.classList.remove('translate-x-full');
+  }
+  function closeCart() {
+    overlay.classList.add('hidden');
+    drawer.classList.add('translate-x-full');
+  }
+
+  document.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = Number(btn.dataset.id);
+      cart[id] = (cart[id] || 0) + 1;
+      renderCart();
+      openCart();
+    });
+  });
+
+  fab.addEventListener('click', openCart);
+  closeBtn.addEventListener('click', closeCart);
+  overlay.addEventListener('click', closeCart);
+
+  function changeQty(id, delta) {
+    if (!cart[id]) return;
+    cart[id] += delta;
+    if (cart[id] <= 0) delete cart[id];
+    renderCart();
+  }
+
+  function renderCart() {
+    const ids = Object.keys(cart);
+    itemsEl.innerHTML = '';
+
+    if (ids.length === 0) {
+      itemsEl.classList.add('hidden');
+      emptyEl.classList.remove('hidden');
+    } else {
+      itemsEl.classList.remove('hidden');
+      emptyEl.classList.add('hidden');
+    }
+
+    let total = 0;
+    let totalQty = 0;
+
+    ids.forEach(id => {
+      const item = MENU.find(m => m.id === Number(id));
+      const qty = cart[id];
+      const lineTotal = item.preco * qty;
+      total += lineTotal;
+      totalQty += qty;
+
+      const row = document.createElement('div');
+      row.className = "flex items-start justify-between gap-3 pb-3 border-b border-dashed border-ink/15";
+      row.innerHTML = `
+        <div class="flex-1">
+          <p class="font-semibold leading-tight">${item.nome}</p>
+          <p class="text-ink/50 text-xs mt-1">${fmt(item.preco)} un.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="qty-btn w-6 h-6 rounded-full border border-ink/20 flex items-center justify-center hover:bg-ink/5" data-id="${id}" data-delta="-1">−</button>
+          <span class="w-4 text-center">${qty}</span>
+          <button class="qty-btn w-6 h-6 rounded-full border border-ink/20 flex items-center justify-center hover:bg-ink/5" data-id="${id}" data-delta="1">+</button>
+        </div>
+      `;
+      itemsEl.appendChild(row);
+    });
+
+    itemsEl.querySelectorAll('.qty-btn').forEach(b => {
+      b.addEventListener('click', () => changeQty(Number(b.dataset.id), Number(b.dataset.delta)));
+    });
+
+    countEl.textContent = totalQty;
+    subtotalEl.textContent = fmt(total);
+    totalEl.textContent = fmt(total);
+
+    // Monta a mensagem formatada para o WhatsApp
+    let msg = "Olá! Gostaria de fazer o seguinte pedido na *Tanta Pizza*:\n\n";
+    ids.forEach(id => {
+      const item = MENU.find(m => m.id === Number(id));
+      const qty = cart[id];
+      msg += `• ${qty}x ${item.nome} — ${fmt(item.preco * qty)}\n`;
+    });
+    msg += `\n*Total: ${fmt(total)}*\n\nAguardo confirmação, obrigado!`;
+
+    waLink.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  }
+
+  // ---------- SCROLL REVEAL ----------
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

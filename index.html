@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanta Pizza | Massa de 48h de Fermentação — Belém, PA</title>
+<meta name="description" content="Pizzas artesanais com massa de longa fermentação (48h), leve e de fácil digestão. Peça agora e receba em Belém.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:      '#140F0C',
+          char:     '#1E1712',
+          charup:   '#251C16',
+          surface:  '#2A2019',
+          crust:    '#E8A33D',
+          crustdk:  '#C67F21',
+          sauce:    '#C1401F',
+          saucedk:  '#8F2C14',
+          jambu:    '#7A9A56',
+          jambudk:  '#566F3B',
+          cream:    '#F4EADC',
+          muted:    '#B4A28A',
+        },
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          body:    ['Sora', 'sans-serif'],
+          mono:    ['"JetBrains Mono"', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #1E1712;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 15% 0%, rgba(232,163,61,0.08), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 20%, rgba(193,64,31,0.10), transparent 60%);
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 60; opacity: .05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.show { opacity: 1; transform: translateY(0); }
+
+  /* ===== MARCA D'AGUA TIPOGRAFICA ===== */
+  .watermark {
+    position: fixed;
+    inset: -20%;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    overflow: hidden;
+    transform: rotate(-18deg);
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .watermark-row {
+    display: flex;
+    gap: 4rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .watermark-word {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: rgba(232, 163, 61, 0.045);
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+  .watermark-word span {
+    color: rgba(193, 64, 31, 0.035);
+    margin-left: 0.4em;
+    font-weight: 300;
+  }
+
+  .dough {
+    clip-path: polygon(6% 2%, 22% 0%, 40% 3%, 58% 0%, 76% 3%, 94% 0%, 100% 18%, 97% 38%, 100% 58%, 96% 78%, 100% 94%, 80% 100%, 60% 97%, 42% 100%, 24% 97%, 2% 100%, 0% 80%, 4% 60%, 0% 40%, 3% 20%);
+  }
+
+  .ticket-tear-top, .ticket-tear-bottom {
+    height: 14px;
+    background-image: radial-gradient(circle at 10px 0, #1E1712 6px, transparent 6.5px);
+    background-size: 20px 14px;
+    background-repeat: repeat-x;
+  }
+  .ticket-tear-bottom { transform: rotate(180deg); }
+
+  .seal { position: relative; }
+  .seal::after {
+    content: attr(data-n);
+    position: absolute; top: -10px; right: -10px;
+    width: 34px; height: 34px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+    background: #1E1712; color: #E8A33D; border: 1px dashed rgba(232,163,61,0.5);
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #1E1712; }
+  ::-webkit-scrollbar-thumb { background: #C67F21; border-radius: 8px; }
+
+  #cart-drawer { transition: transform .45s cubic-bezier(.16,1,.3,1); }
+
+  /* ===== PIZZA CARD (estilo balao do index) ===== */
+  .pizza-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .pizza-bubble {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.55), 0 0 0 6px rgba(232,163,61,0.18);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background: #2A2019;
+  }
+  .pizza-bubble img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 50%;
+    transition: transform 0.35s ease;
+  }
+  .pizza-bubble:hover img {
+    transform: scale(1.08);
+  }
+  .pizza-bubble:hover {
+    transform: translateY(-6px) scale(1.04);
+    box-shadow: 0 28px 60px rgba(0,0,0,0.65), 0 0 0 8px rgba(232,163,61,0.3);
+  }
+  .pizza-bubble::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 28% 24%, rgba(255,255,255,0.12) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .pizza-add-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #C1401F;
+    color: #F4EADC;
+    cursor: pointer;
+    margin-top: -22px;
+    position: relative;
+    z-index: 2;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    border: 3px solid #1E1712;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(193,64,31,0.45);
+  }
+  .pizza-add-btn:hover { background-color: #8F2C14; transform: scale(1.12); }
+  .pizza-add-btn:active { transform: scale(0.95); }
+  .pizza-price {
+    font-family: 'JetBrains Mono', monospace;
+    color: #E8A33D;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  .pizza-price::before { content: "R$ "; font-size: 0.8em; opacity: 0.7; }
+  .pizza-name {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #F4EADC;
+    margin-top: 4px;
+    line-height: 1.2;
+  }
+  .pizza-desc {
+    font-family: 'Sora', sans-serif;
+    font-size: 11.5px;
+    color: #B4A28A;
+    margin-top: 6px;
+    line-height: 1.5;
+    max-width: 175px;
+  }
+  .destaque-badge {
+    display: inline-block;
+    background: rgba(122,154,86,0.15);
+    color: #7A9A56;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid rgba(122,154,86,0.3);
+    border-radius: 999px;
+    padding: 2px 8px;
+    margin-top: 7px;
+  }
+  .cat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #C67F21;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .cat-divider {
+    flex: 1;
+    height: 1px;
+    background: rgba(232,163,61,0.18);
+    margin-left: 14px;
+  }
+
+  /* ===== MENU IMPRESSO (paper-tear, estilo tanta-pizza original) ===== */
+  .price-tag::before { content: "R$"; font-size: .6em; vertical-align: middle; opacity: .7; margin-right: 2px; }
+
+  .paper-tear {
+    clip-path: polygon(
+      0% 3%, 5% 0%, 10% 3%, 15% 0%, 20% 3%, 25% 0%, 30% 3%, 35% 0%, 40% 3%, 45% 0%, 50% 3%, 55% 0%, 60% 3%, 65% 0%, 70% 3%, 75% 0%, 80% 3%, 85% 0%, 90% 3%, 95% 0%, 100% 3%,
+      100% 97%, 95% 100%, 90% 97%, 85% 100%, 80% 97%, 75% 100%, 70% 97%, 65% 100%, 60% 97%, 55% 100%, 50% 97%, 45% 100%, 40% 97%, 35% 100%, 30% 97%, 25% 100%, 20% 97%, 15% 100%, 10% 97%, 5% 100%, 0% 97%
+    );
+  }
+  .menu-paper {
+    background-color: #F4EADC;
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(20,15,12,0.04), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(20,15,12,0.05), transparent 45%),
+      repeating-linear-gradient(0deg, rgba(20,15,12,0.015) 0px, rgba(20,15,12,0.015) 1px, transparent 1px, transparent 3px);
+    border: none;
+    color: #140F0C;
+  }
+  .leader { flex: 1 1 auto; border-bottom: 2px dotted rgba(20,15,12,0.28); margin: 0 10px; transform: translateY(-4px); min-width: 16px; }
+  /* dough-sm: recorte tipo pizza no menu impresso */
+  .dough-sm {
+    clip-path: polygon(6% 2%, 22% 0%, 40% 3%, 58% 0%, 76% 3%, 94% 0%, 100% 18%, 97% 38%, 100% 58%, 96% 78%, 100% 94%, 80% 100%, 60% 97%, 42% 100%, 24% 97%, 2% 100%, 0% 80%, 4% 60%, 0% 40%, 3% 20%);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .dough-sm img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  /* ===== TOP UTILITY BAR ===== */
+  .topbar {
+    background: #140F0C;
+    border-bottom: 1px solid rgba(232,163,61,0.08);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: #B4A28A;
+    padding: 7px 0;
+  }
+  .topbar a {
+    color: #B4A28A;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s;
+  }
+  .topbar a:hover { color: #E8A33D; }
+  .topbar-sep {
+    width: 1px;
+    height: 12px;
+    background: rgba(232,163,61,0.2);
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 10px;
+  }
+</style>
+</head>
+
+<body class="bg-char text-cream font-body antialiased">
+<div class="grain"></div>
+
+<!-- MARCA D'AGUA -->
+<div class="watermark" aria-hidden="true">
+  <!-- JS vai gerar as linhas -->
+</div>
+
+<!-- TOP UTILITY BAR -->
+<div class="topbar relative z-[51]">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 flex items-center justify-between flex-wrap gap-y-1">
+    <!-- Esquerda: horário e localização -->
+    <div class="flex items-center gap-1 text-muted/70">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      <span>Ter–Dom&nbsp;&nbsp;18h–23h30</span>
+      <span class="topbar-sep"></span>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Belém, PA</span>
+    </div>
+    <!-- Direita: ações rápidas -->
+    <div class="flex items-center gap-1 flex-wrap">
+      <a href="tel:+5591999999999">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.59a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+        (91) 99999-9999
+      </a>
+      <span class="topbar-sep"></span>
+      <a href="cardapio.pdf" download="Cardápio Tanta Pizza.pdf">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Baixar Cardápio
+      </a>
+      <span class="topbar-sep"></span>
+      <a href="cardapio.pdf" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Ver na Web
+      </a>
+      <span class="topbar-sep hidden sm:inline-block"></span>
+      <a href="https://instagram.com/tantapizza" target="_blank" rel="noopener" class="hidden sm:inline-flex">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        Instagram
+      </a>
+      <span class="topbar-sep hidden sm:inline-block"></span>
+      <a href="https://wa.me/5591999999999" target="_blank" rel="noopener" class="hidden sm:inline-flex" style="color:#7A9A56;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.44 5.14L2 22l5.09-1.53a9.85 9.85 0 0 0 4.95 1.34h.01c5.46 0 9.91-4.45 9.91-9.9C21.96 6.45 17.5 2 12.04 2z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- NAV PRINCIPAL -->
+<header class="sticky top-0 inset-x-0 z-50 backdrop-blur-md bg-ink/80 border-b border-white/6 shadow-lg shadow-black/20">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 h-[60px] flex items-center justify-between">
+    <a href="#topo" class="flex items-center gap-1.5 select-none group">
+      <span class="font-display italic font-medium text-[22px] text-crust group-hover:text-crustdk transition-colors">Tanta</span>
+      <span class="font-display font-semibold text-[22px] text-cream -ml-0.5">pizza</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-7 font-body text-[13px] tracking-wide text-muted">
+      <a href="#cardapio" class="hover:text-cream transition-colors">Cardápio</a>
+      <a href="#cardapio-papel" class="hover:text-cream transition-colors">Menu Completo</a>
+      <a href="#contato" class="hover:text-cream transition-colors">Contato</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <!-- WhatsApp rápido (mobile) -->
+      <a href="https://wa.me/5591999999999" target="_blank"
+         class="md:hidden w-9 h-9 rounded-full bg-jambu/20 border border-jambu/30 flex items-center justify-center text-jambu hover:bg-jambu/30 transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.44 5.14L2 22l5.09-1.53a9.85 9.85 0 0 0 4.95 1.34h.01c5.46 0 9.91-4.45 9.91-9.9C21.96 6.45 17.5 2 12.04 2z"/></svg>
+      </a>
+      <a href="#cardapio" class="bg-crust hover:bg-crustdk text-ink font-semibold text-[13px] px-5 py-2.5 rounded-full transition-colors shadow-md shadow-crust/20">
+        Pedir Agora
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="topo" class="relative pt-32 pb-20 md:pt-36 md:pb-28 overflow-hidden">
+  <div class="absolute -top-24 -right-24 w-[500px] h-[500px] rounded-full bg-sauce/15 blur-[120px]"></div>
+  <div class="absolute top-40 -left-32 w-[400px] h-[400px] rounded-full bg-jambu/8 blur-[120px]"></div>
+  <div class="relative max-w-6xl mx-auto px-5 md:px-8 grid md:grid-cols-2 gap-12 items-center">
+    <div class="reveal show">
+      <!-- Label -->  
+      <span class="inline-flex items-center gap-2 text-[11px] tracking-[0.22em] uppercase text-jambu font-semibold mb-5">
+        <span class="w-1 h-1 rounded-full bg-jambu"></span>
+        Feita à mão &nbsp;·&nbsp; Belém do Pará
+      </span>
+      <!-- Heading -->
+      <h1 class="font-display text-cream">
+        <span class="block text-[clamp(3.5rem,8vw,6rem)] font-semibold text-crust leading-none">48 horas</span>
+        <span class="block text-[clamp(1.3rem,3vw,2.25rem)] italic font-light text-cream/85 mt-2 leading-snug">de fermentação lenta,</span>
+        <span class="block text-[clamp(1.3rem,3vw,2.25rem)] italic font-light text-cream/85 leading-snug">numa massa incrivelmente leve.</span>
+      </h1>
+      <!-- Subtítulo -->
+      <p class="mt-6 text-muted text-[15px] md:text-[16px] max-w-[420px] leading-[1.75]">
+        Aberta à mão, com muito amor e controle. Uma textura aerada e de fácil digestão — porque pizza boa também é sobre como você se sente depois.
+      </p>
+      <!-- CTAs -->
+      <div class="mt-8 flex flex-col sm:flex-row gap-3">
+        <a href="#cardapio"
+           class="inline-flex items-center justify-center gap-2 bg-sauce hover:bg-saucedk text-cream font-semibold text-[14px] px-7 py-[14px] rounded-full transition-colors shadow-xl shadow-sauce/25">
+          Ver Cardápio
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://wa.me/5591999999999" target="_blank" rel="noopener"
+           class="inline-flex items-center justify-center gap-2 bg-jambu/15 hover:bg-jambu/25 border border-jambu/30 hover:border-jambu/60 text-jambu font-semibold text-[14px] px-7 py-[14px] rounded-full transition-colors">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.44 5.14L2 22l5.09-1.53a9.85 9.85 0 0 0 4.95 1.34h.01c5.46 0 9.91-4.45 9.91-9.9C21.96 6.45 17.5 2 12.04 2z"/></svg>
+          Falar no WhatsApp
+        </a>
+      </div>
+    </div>
+    <!-- Imagem hero -->
+    <div class="relative reveal show mx-auto">
+      <div class="dough w-60 h-60 md:w-[380px] md:h-[380px] mx-auto relative overflow-hidden"
+           style="box-shadow: 0 30px 70px -20px rgba(0,0,0,.75), 0 0 80px -10px rgba(232,163,61,0.18);">
+        <img src="images/TANTOPIZZAHERO.png" alt="Pizza artesanal Tanta Pizza"
+             class="w-full h-full object-cover object-center" style="display:block;">
+        <div class="absolute inset-0"
+             style="background: radial-gradient(circle at 28% 22%, rgba(255,255,255,0.09) 0%, transparent 55%);"></div>
+      </div>
+      <div class="absolute -bottom-4 -left-4 md:-left-10 bg-ink/95 border border-white/10 rounded-2xl px-4 py-3 shadow-2xl backdrop-blur-sm">
+        <p class="font-mono text-crust text-[10px] tracking-widest uppercase">fermentação</p>
+        <p class="font-display text-[22px] text-cream font-semibold leading-tight">48h00</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- CARDAPIO -->
+<section id="cardapio" class="relative py-24 md:py-32">
+  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-crust/5 blur-[140px] pointer-events-none"></div>
+  <div class="relative max-w-6xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-16 reveal">
+      <span class="text-xs tracking-[0.2em] uppercase text-crust font-semibold">Cardápio</span>
+      <h2 class="font-display text-4xl md:text-5xl font-semibold mt-3">Escolha a sua.</h2>
+      <p class="text-muted text-sm mt-4 max-w-md mx-auto">
+        Toque em <span class="text-crust font-semibold">+</span> para montar seu pedido — o carrinho monta a mensagem pronta para o WhatsApp.
+      </p>
+    </div>
+    <div id="menu-body" class="space-y-16"></div>
+  </div>
+</section>
+
+<!-- DIVISOR VISUAL -->
+<div class="relative max-w-4xl mx-auto px-5 md:px-8 py-8 flex items-center gap-5 reveal">
+  <span class="flex-1 border-t border-white/10"></span>
+  <span class="font-mono text-xs tracking-[0.25em] uppercase text-muted/50">cardápio completo</span>
+  <span class="flex-1 border-t border-white/10"></span>
+</div>
+
+<!-- DOWNLOAD PDF + QR CODE -->
+<section class="relative py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="reveal bg-surface/60 border border-white/8 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-10 md:gap-16">
+
+      <!-- Download PDF -->
+      <div class="flex-1 text-center md:text-left">
+        <span class="text-xs tracking-[0.2em] uppercase text-crust font-semibold">Cardápio completo</span>
+        <h3 class="font-display text-3xl md:text-4xl font-semibold mt-3 leading-tight">
+          Leve o cardápio<br><span class="italic text-crust">no seu bolso.</span>
+        </h3>
+        <p class="text-muted mt-4 text-sm leading-relaxed max-w-sm md:mx-0 mx-auto">
+          Baixe o PDF completo com todos os sabores, preços e ingredientes. Funciona offline no celular e no computador.
+        </p>
+        <div class="mt-7 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+          <a href="cardapio.pdf" download="Cardápio Tanta Pizza.pdf"
+             class="inline-flex items-center justify-center gap-3 bg-crust hover:bg-crustdk text-ink font-semibold px-7 py-4 rounded-full transition-colors shadow-lg shadow-crust/20">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Baixar PDF
+          </a>
+          <a href="cardapio.pdf" target="_blank" rel="noopener"
+             class="inline-flex items-center justify-center gap-3 border border-white/15 hover:border-crust/50 text-cream/90 font-medium px-7 py-4 rounded-full transition-colors">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Abrir no navegador
+          </a>
+        </div>
+      </div>
+
+      <!-- QR Code -->
+      <div class="flex flex-col items-center gap-4 flex-shrink-0">
+        <div class="bg-[#F4EADC] rounded-2xl p-4 shadow-2xl shadow-black/40">
+          <div id="qrcode" class="w-36 h-36 md:w-44 md:h-44"></div>
+        </div>
+        <div class="text-center">
+          <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-muted/70">Escaneie para acessar</p>
+          <p class="font-display italic text-sm text-crust mt-0.5">o cardápio online</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CARDAPIO IMPRESSO (paper-tear) -->
+<section id="cardapio-papel" class="relative pb-24 md:pb-32">
+  <div class="relative max-w-6xl mx-auto px-5 md:px-8">
+    <div class="reveal paper-tear menu-paper shadow-[0_40px_80px_-30px_rgba(0,0,0,0.8)] px-8 py-16 sm:px-16 sm:py-20">
+      <div class="text-center mb-12 pb-10 border-b-2 border-dotted border-crust/20">
+        <p class="font-display italic text-3xl text-crust">Tanta</p>
+        <p class="font-display font-semibold text-4xl text-cream -mt-2">pizza</p>
+        <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-muted mt-4">Massa de 48h · Aberta à mão · Belém, PA</p>
+      </div>
+      <div id="menu-paper-body" class="space-y-14"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contato" class="bg-ink border-t border-white/5 pt-16 pb-28 md:pb-16">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 grid md:grid-cols-3 gap-10">
+    <div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="font-display italic font-medium text-2xl text-crust">Tanta</span>
+        <span class="font-display font-semibold text-2xl text-cream -ml-1">pizza</span>
+      </div>
+      <p class="text-muted text-sm leading-relaxed max-w-xs">Massas artesanais de longa fermentação, feitas à mão em Belém do Pará.</p>
+    </div>
+    <div>
+      <h4 class="font-body font-semibold text-cream text-sm uppercase tracking-wide mb-4">Atendimento</h4>
+      <ul class="space-y-2 text-muted text-sm">
+        <li>Ter. a Dom. — 18h às 23h30</li>
+        <li>Belém, Pará — Brasil</li>
+        <li class="font-mono text-crust">(91) 99999-9999</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-body font-semibold text-cream text-sm uppercase tracking-wide mb-4">Redes sociais</h4>
+      <ul class="space-y-2 text-muted text-sm">
+        <li><a href="#" class="hover:text-crust transition-colors">Instagram</a></li>
+        <li><a href="#" class="hover:text-crust transition-colors">Facebook</a></li>
+        <li><a href="#" class="hover:text-crust transition-colors">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-5 md:px-8 mt-12 pt-6 border-t border-white/5 text-xs text-muted/60">
+    © 2026 Tanta Pizza. Todos os direitos reservados.
+  </div>
+</footer>
+
+<!-- CARRINHO FLUTUANTE -->
+<button id="cart-fab" class="fixed bottom-5 right-5 z-50 bg-sauce hover:bg-saucedk text-cream rounded-full shadow-2xl shadow-black/40 pl-5 pr-6 py-4 flex items-center gap-3 transition-transform active:scale-95">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+  <span class="font-semibold text-sm">Meu pedido</span>
+  <span id="cart-count" class="bg-cream text-ink text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+</button>
+
+<div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] hidden"></div>
+
+<aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[380px] z-[60] translate-x-full">
+  <div class="h-full flex flex-col bg-[#F4EADC] text-ink">
+    <div class="ticket-tear-top"></div>
+    <div class="px-6 pt-2 pb-4 flex items-center justify-between border-b border-dashed border-ink/20">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest text-ink/50">Comanda</p>
+        <h3 class="font-display text-2xl font-semibold">Seu pedido</h3>
+      </div>
+      <button id="cart-close" class="w-9 h-9 rounded-full hover:bg-ink/5 flex items-center justify-center transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#140F0C" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div id="cart-items" class="flex-1 overflow-y-auto px-6 py-4 font-mono text-sm space-y-4"></div>
+    <div id="cart-empty" class="flex-1 flex items-center justify-center text-center px-6 text-ink/50 font-mono text-sm">
+      Sua comanda está vazia.<br>Adicione uma pizza do cardápio.
+    </div>
+    <div class="px-6 py-5 border-t border-dashed border-ink/20 font-mono">
+      <div class="flex items-center justify-between text-sm text-ink/60 mb-1">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">R$ 0,00</span>
+      </div>
+      <div class="flex items-center justify-between text-lg font-bold mb-4">
+        <span>Total</span>
+        <span id="cart-total">R$ 0,00</span>
+      </div>
+      <a id="cart-whatsapp" href="#" target="_blank" rel="noopener"
+         class="w-full flex items-center justify-center gap-2 bg-jambu hover:bg-jambudk text-cream font-body font-semibold py-4 rounded-full transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.44 5.14L2 22l5.09-1.53a9.85 9.85 0 0 0 4.95 1.34h.01c5.46 0 9.91-4.45 9.91-9.9C21.96 6.45 17.5 2 12.04 2zm5.83 14.13c-.24.68-1.42 1.3-1.96 1.38-.5.08-1.13.11-1.83-.12-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.83 2 .9 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.29.29-.12.57.17.29.75 1.24 1.62 2.01 1.11 1 2.05 1.31 2.34 1.46.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.64.77 1.92.91.28.14.46.22.53.34.07.12.07.68-.17 1.36z"/></svg>
+        Enviar pedido no WhatsApp
+      </a>
+    </div>
+    <div class="ticket-tear-bottom"></div>
+  </div>
+</aside>
+
+<script>
+  const MENU = [
+    { id:1,  img:'images/MUSSARELATRADICIONAL.jpeg',  categoria:"Classicas",               nome:"Mussarela Tradicional",       desc:"Molho de tomate artesanal coberto com mussarela e oregano.",                                                                         preco:49.50 },
+    { id:2,  img:'images/MARGUERITAESPECIAL.jpeg',    categoria:"Classicas",               nome:"Marguerita Especial",          desc:"Molho de tomate artesanal, mussarela, rodelas de tomates assados, manjericao fresco e oregano.",                                    preco:59.50 },
+    { id:3,  img:'images/CALABRESA.jpeg',             categoria:"Classicas",               nome:"Calabresa com Cebola",         desc:"Molho de tomate artesanal, mussarela, calabresa premium, cebolas assadas e oregano.",                                               preco:59.50 },
+    { id:4,  img:'images/BACONCROCANTE.jpeg',         categoria:"Especiais",               nome:"Bacon Crocante",               desc:"Molho de tomate artesanal, mussarela, fatias de bacon crocantes e oregano.",                                                        preco:69.50 },
+    { id:5,  img:'images/FRANGOCOMREQ.jpeg',          categoria:"Especiais",               nome:"Frango com Requeijao",         desc:"Camada cremosa de requeijao, frango desfiado, mussarela e oregano.",                                                                preco:69.50 },
+    { id:6,  img:'images/CARNEDESFIADA.jpeg',         categoria:"Especiais",               nome:"Carne Desfiada Premium",       desc:"Requeijao, carne desfiada super macia, mussarela, cebolas assadas, cebolinha e oregano.",                                          preco:79.50 },
+    { id:7,  img:'images/FILECOMALHO.jpeg',           categoria:"Especiais",               nome:"File Com Alho Frito",          desc:"Mussarela, file em isca, alho frito e oregano.",                                                                                    preco:79.50 },
+    { id:8,  img:'images/CAMARAOROSA.jpeg',           categoria:"Frutos do Mar e Regional",nome:"Camarao Rosa ao Alho Frito",   desc:"Mussarela, camarao rosa, alho frito e oregano.",                                                                                   preco:84.50 },
+    { id:9,  img:'images/VATAPAMARAJOARA.jpeg',       categoria:"Frutos do Mar e Regional",nome:"Vatapa Marajoara",              desc:"Molho a base de vatapa, mussarela de bufala, camarao rosa e jambu cozido. Nossa especialidade regional.",                         preco:84.50, destaque:true },
+    { id:10, img:'images/CREMEDEAVELA.jpeg',          categoria:"Doce",                    nome:"Creme de Avela",               desc:"Molho a base de leite coberto com creme de avela e nibs de cacau.",                                                                 preco:79.50 },
+  ];
+
+  const CAT_LABELS = {
+    "Classicas":               "Cl\u00e1ssicas",
+    "Especiais":               "Especiais",
+    "Frutos do Mar e Regional":"Frutos do Mar & Regional",
+    "Doce":                    "Doce"
+  };
+  const CATEGORIAS = ["Classicas","Especiais","Frutos do Mar e Regional","Doce"];
+
+  const fmt = v => v.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+
+  // ---- BALOES ----
+  const menuBody = document.getElementById('menu-body');
+
+  CATEGORIAS.forEach(cat => {
+    const itens = MENU.filter(m => m.categoria === cat);
+    if (!itens.length) return;
+
+    const section = document.createElement('div');
+
+    const catHeader = document.createElement('div');
+    catHeader.className = 'flex items-center mb-10 reveal';
+    catHeader.innerHTML = '<span class="cat-label">' + CAT_LABELS[cat] + '</span><span class="cat-divider"></span>';
+    section.appendChild(catHeader);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-14';
+
+    itens.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'pizza-card reveal';
+      card.innerHTML =
+        '<div style="position:relative;display:flex;flex-direction:column;align-items:center;">' +
+          '<div class="pizza-bubble">' +
+            '<img src="' + item.img + '" alt="' + item.nome + '" loading="lazy">' +
+          '</div>' +
+          '<button data-id="' + item.id + '" class="pizza-add-btn add-btn" aria-label="Adicionar ' + item.nome + '">' +
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="pizza-price">' + item.preco.toFixed(2).replace('.', ',') + '</div>' +
+        '<div class="pizza-name">' + item.nome + '</div>' +
+        '<div class="pizza-desc">' + item.desc + '</div>' +
+        (item.destaque ? '<span class="destaque-badge">\u2605 Especialidade</span>' : '');
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    menuBody.appendChild(section);
+  });
+
+  // ---- MENU IMPRESSO (paper) ----
+  const paper = document.getElementById('menu-paper-body');
+
+  CATEGORIAS.forEach(cat => {
+    const itens = MENU.filter(m => m.categoria === cat);
+    if (!itens.length) return;
+
+    const catBlock = document.createElement('div');
+    catBlock.className = 'reveal';
+
+    const rows = itens.map((item, idx) => `
+      <div class="group py-6 ${idx < itens.length - 1 ? 'border-b border-dotted border-ink/15' : ''}">
+        <div class="flex items-center gap-5">
+          <div class="dough-sm w-20 h-20 shadow-md flex-shrink-0">
+            <img src="${item.img}" alt="${item.nome}" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline flex-wrap gap-x-2">
+              <h3 class="font-display text-xl font-semibold text-ink leading-snug">
+                ${item.nome}
+                ${item.destaque ? `<span class="align-middle ml-2 inline-block bg-jambu/15 text-jambudk text-[10px] font-mono font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border border-jambu/30">Especialidade</span>` : ''}
+              </h3>
+              <span class="leader"></span>
+              <span class="font-mono price-tag text-saucedk font-bold text-lg whitespace-nowrap">${item.preco.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <p class="text-ink/60 text-sm italic mt-2 leading-relaxed pr-2">${item.desc}</p>
+          </div>
+          <button data-id="${item.id}" class="add-btn flex-shrink-0 w-10 h-10 rounded-full bg-ink text-cream hover:bg-sauce flex items-center justify-center transition-colors shadow-md" aria-label="Adicionar ${item.nome}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    catBlock.innerHTML = `
+      <div class="flex items-center gap-4 mb-4">
+        <h4 class="font-mono text-xs tracking-[0.25em] uppercase text-saucedk font-semibold whitespace-nowrap">${CAT_LABELS[cat]}</h4>
+        <span class="flex-1 border-t border-ink/15"></span>
+      </div>
+      <div>${rows}</div>
+    `;
+    paper.appendChild(catBlock);
+  });
+
+
+  // ---- CARRINHO ----
+  const cart = {};
+  const fab      = document.getElementById('cart-fab');
+  const drawer   = document.getElementById('cart-drawer');
+  const overlay  = document.getElementById('cart-overlay');
+  const closeBtn = document.getElementById('cart-close');
+  const itemsEl  = document.getElementById('cart-items');
+  const emptyEl  = document.getElementById('cart-empty');
+  const countEl  = document.getElementById('cart-count');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const totalEl  = document.getElementById('cart-total');
+  const waLink   = document.getElementById('cart-whatsapp');
+  const WHATSAPP_NUMBER = "5591999999999";
+
+  function openCart()  { overlay.classList.remove('hidden'); drawer.classList.remove('translate-x-full'); }
+  function closeCart() { overlay.classList.add('hidden');    drawer.classList.add('translate-x-full'); }
+
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.add-btn');
+    if (!btn) return;
+    const id = Number(btn.dataset.id);
+    cart[id] = (cart[id] || 0) + 1;
+    renderCart();
+    openCart();
+  });
+
+  fab.addEventListener('click', openCart);
+  closeBtn.addEventListener('click', closeCart);
+  overlay.addEventListener('click', closeCart);
+
+  function changeQty(id, delta) {
+    if (!cart[id]) return;
+    cart[id] += delta;
+    if (cart[id] <= 0) delete cart[id];
+    renderCart();
+  }
+
+  function renderCart() {
+    const ids = Object.keys(cart);
+    itemsEl.innerHTML = '';
+    if (ids.length === 0) {
+      itemsEl.classList.add('hidden');
+      emptyEl.classList.remove('hidden');
+    } else {
+      itemsEl.classList.remove('hidden');
+      emptyEl.classList.add('hidden');
+    }
+    let total = 0, totalQty = 0;
+    ids.forEach(id => {
+      const item = MENU.find(m => m.id === Number(id));
+      const qty  = cart[id];
+      total    += item.preco * qty;
+      totalQty += qty;
+      const row = document.createElement('div');
+      row.className = "flex items-start justify-between gap-3 pb-3 border-b border-dashed border-ink/15";
+      row.innerHTML =
+        '<div class="flex-1">' +
+          '<p class="font-semibold leading-tight">' + item.nome + '</p>' +
+          '<p class="text-ink/50 text-xs mt-1">' + fmt(item.preco) + ' un.</p>' +
+        '</div>' +
+        '<div class="flex items-center gap-2">' +
+          '<button class="qty-btn w-6 h-6 rounded-full border border-ink/20 flex items-center justify-center hover:bg-ink/5" data-id="' + id + '" data-delta="-1">\u2212</button>' +
+          '<span class="w-4 text-center">' + qty + '</span>' +
+          '<button class="qty-btn w-6 h-6 rounded-full border border-ink/20 flex items-center justify-center hover:bg-ink/5" data-id="' + id + '" data-delta="1">+</button>' +
+        '</div>';
+      itemsEl.appendChild(row);
+    });
+    itemsEl.querySelectorAll('.qty-btn').forEach(b => {
+      b.addEventListener('click', () => changeQty(Number(b.dataset.id), Number(b.dataset.delta)));
+    });
+    countEl.textContent    = totalQty;
+    subtotalEl.textContent = fmt(total);
+    totalEl.textContent    = fmt(total);
+    let msg = "Ol\u00e1! Gostaria de fazer o seguinte pedido na *Tanta Pizza*:\n\n";
+    ids.forEach(id => {
+      const item = MENU.find(m => m.id === Number(id));
+      msg += '\u2022 ' + cart[id] + 'x ' + item.nome + ' \u2014 ' + fmt(item.preco * cart[id]) + '\n';
+    });
+    msg += '\n*Total: ' + fmt(total) + '*\n\nAguardo confirma\u00e7\u00e3o, obrigado!';
+    waLink.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
+  }
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ---- MARCA D'ÁGUA ----
+  (function() {
+    const wm  = document.querySelector('.watermark');
+    const ROWS = 18; // linhas suficientes para cobrir telas grandes + rotação
+    const COLS = 6;  // palavras por linha
+    wm.innerHTML = '';
+    for (let r = 0; r < ROWS; r++) {
+      const row = document.createElement('div');
+      row.className = 'watermark-row';
+      for (let c = 0; c < COLS; c++) {
+        const word = document.createElement('span');
+        word.className = 'watermark-word';
+        word.innerHTML = 'Tanta<span>pizza</span>';
+        row.appendChild(word);
+      }
+      wm.appendChild(row);
+    }
+  })();
+</script>
+
+<script>
+  // ---- QR CODE ----
+  // Altere a URL abaixo para o link do seu site ou do PDF hospedado online
+  const QR_URL = window.location.href.replace(/[^/]*$/, '') + 'cardapio.pdf';
+
+  new QRCode(document.getElementById('qrcode'), {
+    text:          QR_URL,
+    width:         176,
+    height:        176,
+    colorDark:     '#140F0C',
+    colorLight:    '#F4EADC',
+    correctLevel:  QRCode.CorrectLevel.H,
+  });
+
+  // Garante que o QR preenche o container responsivo
+  document.getElementById('qrcode').querySelector('canvas,img') &&
+    Object.assign(
+      document.getElementById('qrcode').querySelector('canvas,img').style,
+      { width:'100%', height:'100%', borderRadius:'8px' }
+    );
+</script>
+</body>
+</html>
